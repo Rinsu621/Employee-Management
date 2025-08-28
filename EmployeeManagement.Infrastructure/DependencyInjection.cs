@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeeManagement.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using EmployeeManagement.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,8 @@ namespace EmployeeManagement.Infrastructure
             {
                 options.UseSqlServer("Server=.;Database=EmployeeCRUD; Trusted_Connection=True; TrustServerCertificate=true;MultipleActiveResultSets=true");
             });
+
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             return services;
         }
     }
