@@ -9,7 +9,7 @@ namespace EmployeeManagement.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Fluent API configuration for the Employee entity
+           
             modelBuilder.Entity<Employee>(entity =>
             {
                 // Set the primary key
