@@ -32,10 +32,28 @@ namespace EmployeeManagement.Api.Controllers
 
         }
 
-        [HttpGet("employee/{id}")]
-        public async Task<IActionResult>GetEmployeeByIdAsync([FromBody] int empId)
+        [HttpGet("employees/{empId}")]
+        public async Task<IActionResult>GetEmployeeByIdAsync([FromRoute] int empId)
         {
             var result = await sender.Send(new GetEmployeesByIdQuery(empId));
+            if (result == null)
+                return NotFound();
+            return Ok(result);
+        }
+
+        [HttpPut("employees/{empId}")]
+        public async Task<IActionResult> UpdateEmployeeAsync([FromRoute] int empId, [FromBody] Employee employee)
+        {
+            var result = await sender.Send(new UpdateEmployeeCommand(empId, employee));
+            if (result == null)
+                return NotFound();
+            return Ok(result);
+        }
+
+        [HttpDelete("employees/{empId}")]
+        public async Task<IActionResult> DeleteEmployeeAsync([FromRoute] int empId)
+        {
+            var result = await sender.Send(new DeleteEmployeeCommand(empId));
             if (result == null)
                 return NotFound();
             return Ok(result);
