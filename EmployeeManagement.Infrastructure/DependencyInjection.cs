@@ -20,6 +20,7 @@ namespace EmployeeManagement.Infrastructure
             });
 
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             return services;
         }
     }

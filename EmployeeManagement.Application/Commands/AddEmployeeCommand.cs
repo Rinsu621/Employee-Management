@@ -1,4 +1,5 @@
-﻿using EmployeeManagement.Domain.Entities;
+﻿using EmployeeManagement.Application.DTOs;
+using EmployeeManagement.Domain.Entities;
 using EmployeeManagement.Domain.Interfaces;
 using MediatR;
 using System;
@@ -11,18 +12,29 @@ namespace EmployeeManagement.Application.Commands
 {
     //This is command that represents the intent to add a new employee
     //Implements IRequest,Employee> because it will return an employee after execution.
-    public record AddEmployeeCommand(Employee employee):IRequest<Employee>;
+    public record AddEmployeeCommand(EmployeeDto employee) : IRequest<EmployeeDto>;
 
-
-    //Logic to handle the AddEmployeeCommand
-    public class AddEmployeeCommandHandler(IEmployeeRepository employeeRepository) : IRequestHandler<AddEmployeeCommand, Employee>
+    public class AddEmployeeCommandHandler(IEmployeeRepository employeeRepository)
+        : IRequestHandler<AddEmployeeCommand, EmployeeDto>
     {
-        public async Task<Employee> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
+        public async Task<EmployeeDto> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
         {
+            var entity = new Employee
+            {
+                EmpName = request.employee.EmpName,
+                Email = request.employee.Email,
+                Phone = request.employee.Phone
+            };
 
-            //Call the repository to add the employee to the database
-            //the repository handles the actual EF core to save change 
-            return await employeeRepository.AddEmployeeByAsync(request.employee);
+            var added = await employeeRepository.AddEmployeeByAsync(entity);
+
+            return new EmployeeDto
+            {
+                Id = added.Id,
+                EmpName = added.EmpName,
+                Email = added.Email,
+                Phone = added.Phone
+            };
         }
     }
 }

@@ -12,21 +12,20 @@ namespace EmployeeManagement.Infrastructure.Repositories
 {
     public  class EmployeeRepository(AppDbContext dbContext): IEmployeeRepository
     {
-        public async Task <IEnumerable<Employee>> GetEmployee()
+        public async Task<IEnumerable<Employee>> GetEmployee()
         {
-            return await dbContext.Employees.ToListAsync();
+            return await dbContext.Employees
+                .Include(e => e.Department) // Eager-load Department
+                .ToListAsync();
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int id)
+        public async Task<Employee> GetEmployeeByIdAsync(int empId)
         {
-            var employee= await dbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
-            if(employee == null)
-            {
-                throw new KeyNotFoundException($"Employee with ID {id} not found.");
-            }
-
-            return await dbContext.Employees.FindAsync(id);
+            return await dbContext.Employees
+                .Include(e => e.Department) // Eager-load Department
+                .FirstOrDefaultAsync(e => e.Id == empId);
         }
+
 
         public async Task<Employee> AddEmployeeByAsync(Employee entity)
         {
