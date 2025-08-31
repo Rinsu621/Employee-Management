@@ -14,7 +14,14 @@ namespace EmployeeManagement.Infrastructure.Repositories
     {
         public async Task<IEnumerable<Department>> GetDepartment()
         {
-            return await dbContext.Departments.Include(d=> d.Employees).ToListAsync();
+            return await dbContext.Departments.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Department>> GetAllDepartmentsWithEmpAsync()
+        {
+            return await dbContext.Departments
+                .Include(d => d.Employees)
+                .ToListAsync();
         }
 
         public async Task<Department> GetDepartmentByIdAsync(int deptId)
@@ -57,7 +64,5 @@ namespace EmployeeManagement.Infrastructure.Repositories
             await dbContext.SaveChangesAsync();
             return true;
         }
-
-
     }
 }

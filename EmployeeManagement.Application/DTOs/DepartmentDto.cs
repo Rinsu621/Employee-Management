@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.DTOs
 {
-    public class DepartmentCreateDto
+    public class DepartmentDto
     {
         public int Id { get; set; }
-        public string DepartmentName { get; set; }
+        public string? departmentName { get; set; }
+        public List<EmployeeDto> Employees { get; set; }
     }
 }

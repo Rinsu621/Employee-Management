@@ -33,7 +33,7 @@ namespace EmployeeManagement.Infrastructure.Data
                 entity.HasOne(e => e.Department)
                       .WithMany(d => d.Employees)
                       .HasForeignKey(e => e.DepartmentId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Department>(entity =>

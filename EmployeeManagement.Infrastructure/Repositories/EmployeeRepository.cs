@@ -15,15 +15,13 @@ namespace EmployeeManagement.Infrastructure.Repositories
         public async Task<IEnumerable<Employee>> GetEmployee()
         {
             return await dbContext.Employees
-                .Include(e => e.Department) // Eager-load Department
+                .Include(e => e.Department) 
                 .ToListAsync();
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(int empId)
         {
-            return await dbContext.Employees
-                .Include(e => e.Department) // Eager-load Department
-                .FirstOrDefaultAsync(e => e.Id == empId);
+            return await dbContext.Employees.Include(e => e.Department).FirstOrDefaultAsync(e => e.Id == empId);
         }
 
 
@@ -58,6 +56,11 @@ namespace EmployeeManagement.Infrastructure.Repositories
             dbContext.Employees.Remove(employee);
             await dbContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<Employee> GetEmployeeByEmailAsync(string email)
+        {
+            return await dbContext.Employees.FirstOrDefaultAsync(e => e.Email == email);
         }
 
     }

@@ -18,5 +18,7 @@ namespace EmployeeManagement.Domain.Interfaces
         Task<Employee> UpdateEmployeeAsync(int empId, Employee entity);
 
         Task<bool> DeleteEmployeeAsync(int empId);
+
+        Task<Employee> GetEmployeeByEmailAsync(string email);
     }
 }

@@ -10,6 +10,7 @@ namespace EmployeeManagement.Domain.Interfaces
     public interface IDepartmentRepository
     {
         Task<IEnumerable<Department>> GetDepartment();
+        Task<IEnumerable<Department>> GetAllDepartmentsWithEmpAsync();
         Task<Department> GetDepartmentByIdAsync(int deptId);
         Task<Department> AddDepartmentAsync(Department entity);
         Task<Department> UpdateDepartmentAsync(int deptId, Department entity);

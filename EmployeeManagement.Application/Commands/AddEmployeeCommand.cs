@@ -19,6 +19,12 @@ namespace EmployeeManagement.Application.Commands
     {
         public async Task<EmployeeDto> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
         {
+            var existingEmployee = await employeeRepository.GetEmployeeByEmailAsync(request.employee.Email);
+            if (existingEmployee != null)
+            {
+                throw new InvalidOperationException($"An employee with email '{request.employee.Email}' already exists.");
+            }
+
             var entity = new Employee
             {
                 EmpName = request.employee.EmpName,
