@@ -15,7 +15,7 @@ namespace EmployeeManagement.Application.Commands
     public record AddEmployeeCommand(EmployeeDto employee) : IRequest<EmployeeDto>;
 
     public class AddEmployeeCommandHandler(IEmployeeRepository employeeRepository)
-        : IRequestHandler<AddEmployeeCommand, EmployeeDto>
+    : IRequestHandler<AddEmployeeCommand, EmployeeDto>
     {
         public async Task<EmployeeDto> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
         {
@@ -29,7 +29,9 @@ namespace EmployeeManagement.Application.Commands
             {
                 EmpName = request.employee.EmpName,
                 Email = request.employee.Email,
-                Phone = request.employee.Phone
+                Phone = request.employee.Phone,
+                Role = "User",           // set default role
+                PasswordHash = "DefaultPassword"       
             };
 
             var added = await employeeRepository.AddEmployeeByAsync(entity);
@@ -39,7 +41,9 @@ namespace EmployeeManagement.Application.Commands
                 Id = added.Id,
                 EmpName = added.EmpName,
                 Email = added.Email,
-                Phone = added.Phone
+                Phone = added.Phone,
+                Role = added.Role  ,// return the role as well
+                Password= added.PasswordHash
             };
         }
     }

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.DTOs
 {
-    public class DepartmentDto
+    public class EmployeeForDepartment
     {
         public int Id { get; set; }
-        public string? departmentName { get; set; }
-        public List<EmployeeForDepartment> Employees { get; set; } = new();
+        public string EmpName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     }
 }

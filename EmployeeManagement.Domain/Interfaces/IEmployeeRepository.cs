@@ -20,5 +20,6 @@ namespace EmployeeManagement.Domain.Interfaces
         Task<bool> DeleteEmployeeAsync(int empId);
 
         Task<Employee> GetEmployeeByEmailAsync(string email);
+
     }
 }

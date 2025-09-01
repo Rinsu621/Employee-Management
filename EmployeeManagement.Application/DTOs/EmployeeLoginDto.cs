@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.DTOs
 {
-    public class EmployeeDto
+    public class EmployeeLoginDto
     {
-        public int Id { get; set; }
-        public string EmpName { get; set; }
         public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Role { get; set; }
         public string Password { get; set; }
     }
 }

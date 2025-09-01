@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.Commands
 {
+    //DepartmentDto data is being sent and reponse will create department object
     public record AddDepartmentCommand(DepartmentCreateDto DepartmentDto) : IRequest<Department>;
 
+    //Input is AddDepartmentCommand and output is Department
+    //Dependency Injection IDepartmentRepository is injected into the Handler
     public class AddDepartmentCommandHandler(IDepartmentRepository departmentRepository) : IRequestHandler<AddDepartmentCommand, Department>
     {
         public async Task<Department> Handle(AddDepartmentCommand request, CancellationToken cancellationToken)

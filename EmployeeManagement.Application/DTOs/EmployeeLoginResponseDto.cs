@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.DTOs
 {
-    public class DepartmentDto
+    public class EmployeeLoginResponseDto
     {
         public int Id { get; set; }
-        public string? departmentName { get; set; }
-        public List<EmployeeForDepartment> Employees { get; set; } = new();
+        public string EmpName { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+        public string Token { get; set; }
     }
 }

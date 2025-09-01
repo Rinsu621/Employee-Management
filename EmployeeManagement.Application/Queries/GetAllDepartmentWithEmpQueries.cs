@@ -14,7 +14,7 @@ namespace EmployeeManagement.Application.Queries
 
 
     public class GetAllDepartmentsWithEmployeesHandler(IDepartmentRepository departmentRepository)
-       : IRequestHandler<GetAllDepartmentWithEmpQuery, IEnumerable<DepartmentDto>>
+    : IRequestHandler<GetAllDepartmentWithEmpQuery, IEnumerable<DepartmentDto>>
     {
         public async Task<IEnumerable<DepartmentDto>> Handle(GetAllDepartmentWithEmpQuery request, CancellationToken cancellationToken)
         {
@@ -24,16 +24,14 @@ namespace EmployeeManagement.Application.Queries
             {
                 Id = d.Id,
                 departmentName = d.DepartmentName,
-                Employees = d.Employees.Select(e => new EmployeeDto
+                Employees = d.Employees?.Select(e => new EmployeeForDepartment
                 {
                     Id = e.Id,
                     EmpName = e.EmpName,
                     Email = e.Email,
                     Phone = e.Phone
-                }).ToList()
+                }).ToList() ?? new List<EmployeeForDepartment>()
             }).ToList();
         }
-
-       
-    }
+}
 }

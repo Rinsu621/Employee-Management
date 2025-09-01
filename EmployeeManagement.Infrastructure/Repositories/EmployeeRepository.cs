@@ -14,9 +14,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
     {
         public async Task<IEnumerable<Employee>> GetEmployee()
         {
-            return await dbContext.Employees
-                .Include(e => e.Department) 
-                .ToListAsync();
+            return await dbContext.Employees.Include(e => e.Department) .ToListAsync();
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(int empId)

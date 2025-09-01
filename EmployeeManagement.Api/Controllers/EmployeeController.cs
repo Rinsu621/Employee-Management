@@ -3,6 +3,7 @@ using EmployeeManagement.Application.DTOs;
 using EmployeeManagement.Application.Queries;
 using EmployeeManagement.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +13,26 @@ namespace EmployeeManagement.Api.Controllers
     [ApiController]
     public class EmployeeController(ISender sender) : ControllerBase
     {
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] EmployeeLoginDto loginDto)
+        {
+            var result = await sender.Send(new EmployeeLoginCommand(loginDto));
+            if (result == null)
+                return Unauthorized(new { message = "Invalid email or password" });
+
+            return Ok(result);
+        }
+
         [HttpPost("")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddEmployeeAsync([FromBody] EmployeeDto employee)
         {
             var result = await sender.Send(new AddEmployeeCommand(employee));
             return Ok(result);
         }
         [HttpGet("employees")]
+        [Authorize]
         public async Task<IActionResult> GetAllEmployeesAsync()
         {
             var employees = await sender.Send(new GetAllEmployeesQuery());
@@ -37,6 +51,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet("employees/{empId}")]
+        [Authorize]
         public async Task<IActionResult> GetEmployeeByIdAsync([FromRoute] int empId)
         {
             var employee = await sender.Send(new GetEmployeesByIdQuery(empId));
@@ -58,6 +73,7 @@ namespace EmployeeManagement.Api.Controllers
 
 
         [HttpPut("employees/{empId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateEmployeeAsync([FromRoute] int empId, [FromBody] EmployeeDto employee)
         {
             var result = await sender.Send(new UpdateEmployeeCommand(empId, employee));
@@ -73,6 +89,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpDelete("employees/{empId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEmployeeAsync([FromRoute] int empId)
         {
             var result = await sender.Send(new DeleteEmployeeCommand(empId));

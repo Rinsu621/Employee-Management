@@ -7,16 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace EmployeeManagement.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructureDI(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructureDI(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<Data.AppDbContext>(options =>
             {
-                options.UseSqlServer("Server=.;Database=EmployeeCRUD; Trusted_Connection=True; TrustServerCertificate=true;MultipleActiveResultSets=true");
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();

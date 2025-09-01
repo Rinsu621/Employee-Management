@@ -13,10 +13,10 @@ namespace EmployeeManagement.Infrastructure.Data
            
             modelBuilder.Entity<Employee>(entity =>
             {
-                // Set the primary key
+               //Primary Key
                 entity.HasKey(e => e.Id);
 
-                // Configure properties
+               
                 entity.Property(e => e.EmpName)
                     .IsRequired()
                     .HasMaxLength(100);
@@ -24,23 +24,24 @@ namespace EmployeeManagement.Infrastructure.Data
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(100);
+                entity.HasIndex(e => e.Email).IsUnique();
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
                     .HasMaxLength(10);
 
-                // Relationship: Employee belongs to one Department
+               // Employee belongs to one Department
                 entity.HasOne(e => e.Department)
                       .WithMany(d => d.Employees)
                       .HasForeignKey(e => e.DepartmentId)
-                      .OnDelete(DeleteBehavior.SetNull);
+                      .OnDelete(DeleteBehavior.SetNull); //When department delete in employee the department will be set null
             });
 
             modelBuilder.Entity<Department>(entity =>
             {
-                // Set the primary key
+              
                 entity.HasKey(d => d.Id);
-                // Configure properties
+              
                 entity.Property(d => d.DepartmentName)
                     .IsRequired()
                     .HasMaxLength(100);

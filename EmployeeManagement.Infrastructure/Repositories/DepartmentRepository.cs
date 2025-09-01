@@ -19,9 +19,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
 
         public async Task<IEnumerable<Department>> GetAllDepartmentsWithEmpAsync()
         {
-            return await dbContext.Departments
-                .Include(d => d.Employees)
-                .ToListAsync();
+            return await dbContext.Departments.Include(d => d.Employees).ToListAsync();
         }
 
         public async Task<Department> GetDepartmentByIdAsync(int deptId)

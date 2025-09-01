@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.Queries
 {
+
     public record GetAllDepartmentsQuery():IRequest<IEnumerable<DepartmentCreateDto>>;
 
     public  class GetAllDepartmentsQueryHandler(IDepartmentRepository departmentRepository) : IRequestHandler<GetAllDepartmentsQuery, IEnumerable<DepartmentCreateDto>>

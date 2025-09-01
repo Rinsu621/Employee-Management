@@ -18,5 +18,9 @@ namespace EmployeeManagement.Domain.Entities
         public int? DepartmentId { get; set; }
 
         public Department Department { get; set; }
+
+        //Authentication and Authorization purpose
+        public string PasswordHash { get; set; }
+        public string Role { get; set; } 
     }
 }

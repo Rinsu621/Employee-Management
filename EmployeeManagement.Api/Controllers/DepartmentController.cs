@@ -76,7 +76,7 @@ namespace EmployeeManagement.Api.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete/{deptId}")]
         public async Task<IActionResult> DeleteDepartmentAsync(int id)
         {
             try
