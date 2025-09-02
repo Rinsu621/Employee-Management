@@ -19,6 +19,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
 
         public async Task<IEnumerable<Department>> GetAllDepartmentsWithEmpAsync()
         {
+            //Select * from Department d Left Join Employees on e.DepartmentId= d.Id;
             return await dbContext.Departments.Include(d => d.Employees).ToListAsync();
         }
 

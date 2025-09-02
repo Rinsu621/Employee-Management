@@ -75,5 +75,17 @@ namespace EmployeeManagement.Api.Controllers
                 return NotFound();
             return Ok(result);
         }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+        {
+            var result= await sender.Send(new ChangePasswordCommand(dto, User));
+            if (!result)
+            {
+                return BadRequest(new { message = "Password change failed. Please check your current password and try again." });
+            }
+            return Ok(new { message = "Password changed successfully." });
+        }
     }
 }

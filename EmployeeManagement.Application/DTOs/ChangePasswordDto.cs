@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.DTOs
 {
-    internal class ChangePasswordDto
+    public class ChangePasswordDto
     {
+        public string currentPassword { get; set; }
+        public string newPassword { get; set; }
     }
 }
