@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.Commands
 {
-    public record UpdateEmployeeCommand(int empId, EmployeeDto employee) : IRequest<EmployeeDto>;
+    public record UpdateEmployeeCommand(int empId, EmployeeForDepartment employee) : IRequest<EmployeeForDepartment>;
 
     public class UpdateEmployeeHandler(IEmployeeRepository employeeRepository)
-        : IRequestHandler<UpdateEmployeeCommand, EmployeeDto>
+        : IRequestHandler<UpdateEmployeeCommand, EmployeeForDepartment>
     {
-        public async Task<EmployeeDto> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
+        public async Task<EmployeeForDepartment> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
         {
             var entity = new Employee
             {
@@ -27,7 +27,7 @@ namespace EmployeeManagement.Application.Commands
 
             var updated = await employeeRepository.UpdateEmployeeAsync(request.empId, entity);
 
-            return new EmployeeDto
+            return new EmployeeForDepartment
             {
                 Id = updated.Id,
                 EmpName = updated.EmpName,

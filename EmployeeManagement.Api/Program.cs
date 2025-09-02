@@ -12,21 +12,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Swagger with JWT support
-builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddEndpointsApiExplorer();// generate documentation automatically for API endpoints
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeManagement API", Version = "v1" });
-
+    //configure swagger for documentation of API
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeManagement API", Version = "v1" }); //define swagger documentation with title and version
+    //tells bearer security scheme is used
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
+        //Http header name used to send the token, sent in Authorization header
         Name = "Authorization",
+        //Http authentication
         Type = SecuritySchemeType.Http,
+        //use Bearer <token> format
         Scheme = "Bearer",
+
         BearerFormat = "JWT",
+        //token goes to Http header
         In = ParameterLocation.Header,
+        //helps user to unbderstand how to enter the token 
         Description = "Enter 'Bearer' [space] and then your token"
     });
 
+
+    //all endpoints in this API require a Bearer token in the Authorization header
+    //after this every endpoint shows a lock icon and requires authorization
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -52,7 +63,7 @@ var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
 var jwtLifespan = int.Parse(builder.Configuration["Jwt:ExpireMinutes"] ?? "60");
 
-// Register token service
+// Register a singleton service that generated JWT tokens i.e only one instance created for lifetime of the applications
 builder.Services.AddSingleton<IJwtTokenService>(new JwtTokenService(jwtSecret, jwtLifespan));
 
 // Add authentication
@@ -72,7 +83,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-        ClockSkew = TimeSpan.Zero
+        ClockSkew = TimeSpan.Zero //Extra time allowed for expiration
     };
 });
 
@@ -87,8 +98,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); //Extracts token from authorization header and validates it
+app.UseAuthorization(); //check authorize attribute in controller
 
 app.MapControllers();
 

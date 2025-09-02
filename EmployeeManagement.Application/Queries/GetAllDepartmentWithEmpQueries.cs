@@ -19,18 +19,19 @@ namespace EmployeeManagement.Application.Queries
         public async Task<IEnumerable<DepartmentDto>> Handle(GetAllDepartmentWithEmpQuery request, CancellationToken cancellationToken)
         {
             var departments = await departmentRepository.GetAllDepartmentsWithEmpAsync();
-
+            //LINQ projection transform each deprtment entity to new object
             return departments.Select(d => new DepartmentDto
             {
                 Id = d.Id,
                 departmentName = d.DepartmentName,
+                //?.Select if d.employee is not null, it maps each employee entity to new DTO if null then skip mapping
                 Employees = d.Employees?.Select(e => new EmployeeForDepartment
                 {
                     Id = e.Id,
                     EmpName = e.EmpName,
                     Email = e.Email,
                     Phone = e.Phone
-                }).ToList() ?? new List<EmployeeForDepartment>()
+                }).ToList() ?? new List<EmployeeForDepartment>() //?? new List.... ensures that if d.Employees was null, an empty list is assigned
             }).ToList();
         }
 }

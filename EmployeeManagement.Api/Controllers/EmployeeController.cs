@@ -38,16 +38,9 @@ namespace EmployeeManagement.Api.Controllers
             var employees = await sender.Send(new GetAllEmployeesQuery());
             if (employees == null || !employees.Any())
                 return NotFound();
-            var result = employees.Select(e => new
-            {
-                e.Id,
-                e.EmpName,
-                e.Email,
-                e.Phone,
-                e.DepartmentId,
-                DepartmentName = e.Department?.DepartmentName
-            }).ToList();
-            return Ok(result);
+
+            // No mapping needed here, handler already returns DTOs
+            return Ok(employees);
         }
 
         [HttpGet("employees/{empId}")]
@@ -57,35 +50,20 @@ namespace EmployeeManagement.Api.Controllers
             var employee = await sender.Send(new GetEmployeesByIdQuery(empId));
             if (employee == null)
                 return NotFound();
-            var result = new
-            {
-                employee.Id,
-                employee.EmpName,
-                employee.Email,
-                employee.Phone,
-                employee.DepartmentId,
-                DepartmentName = employee.Department?.DepartmentName
-            };
-            return Ok(result);
+
+            // No mapping needed, handler already returns DTO
+            return Ok(employee);
         }
-
-        
-
 
         [HttpPut("employees/{empId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateEmployeeAsync([FromRoute] int empId, [FromBody] EmployeeDto employee)
+        public async Task<IActionResult> UpdateEmployeeAsync([FromRoute] int empId, [FromBody] EmployeeForDepartment employee)
         {
             var result = await sender.Send(new UpdateEmployeeCommand(empId, employee));
             if (result == null)
                 return NotFound();
-            return Ok(new
-            {
-                result.Id,
-                result.EmpName,
-                result.Email,
-                result.Phone,
-            });
+
+            return Ok(result);
         }
 
         [HttpDelete("employees/{empId}")]

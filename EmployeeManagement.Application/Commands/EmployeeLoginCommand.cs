@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.Commands
 {
+    //send email and password and return employee details with tokens
     public record EmployeeLoginCommand(EmployeeLoginDto loginDto) : IRequest<EmployeeLoginResponseDto>;
 
     public class EmployeeLoginCommandHandler(

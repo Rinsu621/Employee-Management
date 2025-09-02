@@ -3,6 +3,7 @@ using EmployeeManagement.Application.DTOs;
 using EmployeeManagement.Application.Queries;
 using EmployeeManagement.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,14 @@ namespace EmployeeManagement.Api.Controllers
     public class DepartmentController(ISender sender) : ControllerBase
     {
         [HttpPost("")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddDepartmentAsync([FromBody] DepartmentCreateDto dto)
         {
             var result = await sender.Send(new AddDepartmentCommand(dto));
             return Ok(result);
         }
         [HttpPost("assign-employee")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddEmployeeToDepartmentAsync([FromBody] AddEmployeeToDepartmentDto assignment)
         {
             try
@@ -45,6 +48,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet("")]
+        [Authorize]
         public async Task<IActionResult> GetAllDepartmentsAsync()
         {
             var result = await sender.Send(new GetAllDepartmentsQuery());
@@ -52,6 +56,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet("with-employees")]
+        [Authorize]
         public async Task<IActionResult> GetAllDepartmentsWithEmployeesAsync()
         {
             var result = await sender.Send(new GetAllDepartmentWithEmpQuery());
@@ -59,6 +64,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpPut("update-department/{deptId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateDepartmentAsync(int deptId, [FromBody] DepartmentCreateDto dto)
         {
             try
@@ -77,6 +83,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpDelete("delete/{deptId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteDepartmentAsync(int id)
         {
             try

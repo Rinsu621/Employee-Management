@@ -24,14 +24,16 @@ namespace EmployeeManagement.Application.Commands
             {
                 throw new InvalidOperationException($"An employee with email '{request.employee.Email}' already exists.");
             }
+            var defaultPassword = "DefaultPassword"; 
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(defaultPassword);
 
             var entity = new Employee
             {
                 EmpName = request.employee.EmpName,
                 Email = request.employee.Email,
                 Phone = request.employee.Phone,
-                Role = "User",           // set default role
-                PasswordHash = "DefaultPassword"       
+                Role = request.employee.Role,           
+                PasswordHash = hashedPassword     
             };
 
             var added = await employeeRepository.AddEmployeeByAsync(entity);
@@ -43,7 +45,7 @@ namespace EmployeeManagement.Application.Commands
                 Email = added.Email,
                 Phone = added.Phone,
                 Role = added.Role  ,// return the role as well
-                Password= added.PasswordHash
+                Password= defaultPassword
             };
         }
     }

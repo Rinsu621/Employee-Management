@@ -10,14 +10,27 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.Queries
 {
-    public record GetAllEmployeesQuery() : IRequest<IEnumerable<Employee>>;
+    public record GetAllEmployeesQuery() : IRequest<IEnumerable<EmployeeWithDepartmentDto>>;
 
     public class GetAllEmployeesHandler(IEmployeeRepository employeeRepository)
-     : IRequestHandler<GetAllEmployeesQuery, IEnumerable<Employee>>
+        : IRequestHandler<GetAllEmployeesQuery, IEnumerable<EmployeeWithDepartmentDto>>
     {
-        public async Task<IEnumerable<Employee>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EmployeeWithDepartmentDto>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
-            return await employeeRepository.GetEmployee();
+            var employees = await employeeRepository.GetEmployee(); 
+
+            // Map Employee entities to EmployeeWithDepartmentDto
+            var result = employees.Select(e => new EmployeeWithDepartmentDto
+            {
+                Id = e.Id,
+                EmpName = e.EmpName,
+                Email = e.Email,
+                Phone = e.Phone,
+                DepartmentId = e.DepartmentId,
+                DepartmentName = e.Department != null ? e.Department.DepartmentName : null
+            }).ToList();
+
+            return result;
         }
     }
 }

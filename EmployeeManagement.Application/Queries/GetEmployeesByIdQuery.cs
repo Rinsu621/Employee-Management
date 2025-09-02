@@ -11,14 +11,33 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Application.Queries
 {
-    public record GetEmployeesByIdQuery(int empId) : IRequest<Employee>;
+    public record GetEmployeesByIdQuery(int empId) : IRequest<EmployeeWithDepartmentDto>;
 
     public class GetEmployeesByIdHandler(IEmployeeRepository employeeRepository)
-        : IRequestHandler<GetEmployeesByIdQuery, Employee>
+        : IRequestHandler<GetEmployeesByIdQuery, EmployeeWithDepartmentDto>
     {
-        public async Task<Employee> Handle(GetEmployeesByIdQuery request, CancellationToken cancellationToken)
+        public async Task<EmployeeWithDepartmentDto> Handle(GetEmployeesByIdQuery request, CancellationToken cancellationToken)
         {
-            return await employeeRepository.GetEmployeeByIdAsync(request.empId);
+            var employee = await employeeRepository.GetEmployeeByIdAsync(request.empId);
+
+            if (employee == null)
+            {
+                return null; 
+            }
+
+            // Map to DTO
+      
+           var dto = new EmployeeWithDepartmentDto
+           {
+               Id = employee.Id,
+               EmpName = employee.EmpName,
+               Email = employee.Email,
+               Phone = employee.Phone,
+               DepartmentId = employee.DepartmentId,  // Use the foreign key property
+               DepartmentName = employee.Department != null ? employee.Department.DepartmentName : null
+           };
+
+            return dto;
         }
     }
 }
