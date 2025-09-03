@@ -1,6 +1,8 @@
 using EmployeeManagement.Api;
 using EmployeeManagement.Application.Interface;
 using EmployeeManagement.Application.Services;
+using EmployeeManagement.Application.Validator;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,7 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 
+builder.Services.AddValidatorsFromAssembly(typeof(EmployeeDtoValidator).Assembly);
+
+
+
+
 // Swagger with JWT support
+
 
 builder.Services.AddEndpointsApiExplorer();// generate documentation automatically for API endpoints
 builder.Services.AddSwaggerGen(c =>
@@ -88,7 +96,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
-
+app.UseMiddleware<EmployeeManagement.Api.Middleware.ExceptionHandlingMiddleware>();
 // Configure HTTP pipeline
 if (app.Environment.IsDevelopment())
 {
