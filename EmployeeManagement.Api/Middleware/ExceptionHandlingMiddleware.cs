@@ -51,7 +51,7 @@ namespace EmployeeManagement.Api.Middleware
                         errors = validationEx.Errors, 
                         statusCode = context.Response.StatusCode
                     }),
-                    UnauthorizedAccessException => JsonSerializer.Serialize(new
+                    UnauthorizedAccessException _=> JsonSerializer.Serialize(new
                     {
                         error = "You are not authorized to access this resource.",
                         statusCode = context.Response.StatusCode
