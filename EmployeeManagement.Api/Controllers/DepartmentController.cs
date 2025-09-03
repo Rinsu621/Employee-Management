@@ -13,6 +13,7 @@ namespace EmployeeManagement.Api.Controllers
     [ApiController]
     public class DepartmentController(ISender sender) : ControllerBase
     {
+
         [HttpPost("")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddDepartmentAsync([FromBody] DepartmentCreateDto dto)

@@ -19,7 +19,6 @@ namespace EmployeeManagement.Application.Commands
         {
             var entity = new Employee
             {
-                Id = request.empId,
                 EmpName = request.employee.EmpName,
                 Email = request.employee.Email,
                 Phone = request.employee.Phone

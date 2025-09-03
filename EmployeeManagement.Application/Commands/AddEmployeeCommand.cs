@@ -44,7 +44,7 @@ namespace EmployeeManagement.Application.Commands
                 EmpName = added.EmpName,
                 Email = added.Email,
                 Phone = added.Phone,
-                Role = added.Role  ,// return the role as well
+                Role = added.Role  ,
                 Password= defaultPassword
             };
         }
