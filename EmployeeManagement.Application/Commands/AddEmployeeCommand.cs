@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.Application.DTOs;
+using EmployeeManagement.Application.Exceptions;
 using EmployeeManagement.Domain.Entities;
 using EmployeeManagement.Domain.Interfaces;
 using EmployeeManagement.Infrastructure.Data;
@@ -15,9 +16,9 @@ namespace EmployeeManagement.Application.Commands
 {
     //This is command that represents the intent to add a new employee
     //Implements IRequest,Employee> because it will return an employee after execution.
-    public record AddEmployeeCommand(EmployeeDto employee) : IRequest<EmployeeDto>;
+    public record AddEmployeeCommand(EmployeeDto employee) : IRequest<EmployeeResponseDto>;
 
-    public class AddEmployeeCommandHandler : IRequestHandler<AddEmployeeCommand, EmployeeDto>
+    public class AddEmployeeCommandHandler : IRequestHandler<AddEmployeeCommand, EmployeeResponseDto>
     {
         private readonly AppDbContext dbContext;
         private readonly IValidator<EmployeeDto> validator;
@@ -29,12 +30,19 @@ namespace EmployeeManagement.Application.Commands
         }
 
        
-        public async Task<EmployeeDto> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
+        public async Task<EmployeeResponseDto> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
         {
-            var validationresult = await validator.ValidateAsync(request.employee, cancellationToken);
-            if(!validationresult.IsValid)
+            var validationResult = await validator.ValidateAsync(request.employee, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationresult.Errors);
+                var errors = validationResult.Errors
+                    .GroupBy(e => e.PropertyName)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                throw new CustomValidationException(errors);
             }
 
             var existingEmployee = await dbContext.Employees.FirstOrDefaultAsync(e => e.Email == request.employee.Email, cancellationToken);
@@ -58,7 +66,7 @@ namespace EmployeeManagement.Application.Commands
             dbContext.Employees.Add(entity);
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            return new EmployeeDto
+            return new EmployeeResponseDto
             {
                 Id = entity.Id,
                 EmpName = entity.EmpName,

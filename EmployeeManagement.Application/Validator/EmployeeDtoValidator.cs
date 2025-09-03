@@ -21,7 +21,7 @@ namespace EmployeeManagement.Application.Validator
 
             RuleFor(e => e.Phone)
                 .NotEmpty().WithMessage("Phone number is required.")
-                .Matches(@"^\d{10}$").WithMessage("Phone number must be 10 digits.");
+                .Matches(@"^98\d{8}$").WithMessage("Phone number must be 10 digits.");
 
             RuleFor(e => e.Role)
                .NotEmpty().WithMessage("Role is required.");

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using EmployeeManagement.Application.Exceptions;
+using System.Net;
 using System.Text.Json;
 
 namespace EmployeeManagement.Api.Middleware
@@ -27,6 +28,8 @@ namespace EmployeeManagement.Api.Middleware
 
                 var statusCode = ex switch
                 {
+
+                    CustomValidationException => HttpStatusCode.BadRequest,
                     InvalidOperationException => HttpStatusCode.BadRequest,
                     KeyNotFoundException => HttpStatusCode.NotFound,
                     UnauthorizedAccessException => HttpStatusCode.Unauthorized,
@@ -35,11 +38,30 @@ namespace EmployeeManagement.Api.Middleware
 
                 context.Response.StatusCode = (int)statusCode;
 
-                var result = JsonSerializer.Serialize(new
+                //var result = JsonSerializer.Serialize(new
+                //{
+                //    error = ex.Message,
+                //    statusCode = context.Response.StatusCode
+                //});
+
+                var result = ex switch
                 {
-                    error = ex.Message,
-                    statusCode = context.Response.StatusCode
-                });
+                    CustomValidationException validationEx => JsonSerializer.Serialize(new
+                    {
+                        errors = validationEx.Errors, 
+                        statusCode = context.Response.StatusCode
+                    }),
+                    UnauthorizedAccessException => JsonSerializer.Serialize(new
+                    {
+                        error = "You are not authorized to access this resource.",
+                        statusCode = context.Response.StatusCode
+                    }),
+                    _ => JsonSerializer.Serialize(new
+                    {
+                        error = ex.Message,
+                        statusCode = context.Response.StatusCode
+                    })
+                };
 
                 await context.Response.WriteAsync(result);
             }
